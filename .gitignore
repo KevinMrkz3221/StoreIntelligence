@@ -9,4 +9,3 @@ __pycache__
 top.db
 *.json
 build
-*.log
