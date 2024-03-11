@@ -6,6 +6,7 @@ import json
 
 from bs4 import BeautifulSoup
 import requests
+
 from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 
@@ -23,7 +24,7 @@ class Product(Base):
     product_img = Column(String)
     department = Column(String)
     in_stock = Column(Boolean)
-    added_at = Column(DateTime, default=datetime())
+    added_at = Column(DateTime, default=datetime.now())
 
     def to_dict(self):
         return {
@@ -34,7 +35,7 @@ class Product(Base):
             'product_img': self.product_img,
             'department': self.department,
             'in_stock': self.in_stock,
-            'added_at': self.added_at
+            'added_at': str(self.added_at)
         }
 
     def to_log(self):
@@ -44,7 +45,7 @@ class Product(Base):
             'price': self.price,
             'department': self.department,
             'in_stock': self.in_stock,
-            'added_at': self.added_at
+            'added_at': str(self.added_at)
         }
 
 
