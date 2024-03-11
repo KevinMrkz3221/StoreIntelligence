@@ -10,9 +10,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, Session
 
 from .settings import Base, ENGINE, session, logger
 
-
-
-        
+### Se crea un objeto que pueda entender el orm de SQLAlquemy
 class Product(Base):
     __tablename__ = 'product'
     id = Column(Integer, primary_key=True)
@@ -48,7 +46,7 @@ class Product(Base):
     
 
 
-
+## Se encarga de gran parte de la extraccion
 @dataclass
 class Department:
     name: str
@@ -59,10 +57,13 @@ class Department:
     offer: int = 0
     soup: BeautifulSoup = None
 
+    ## Guarda todos los productos dentro del departamento
     def saveProducts(self):
         session.add_all(self.products)
         session.commit()
+        logger.log(f'Saved department Products | {self.name}')
 
+    ## Guarda un solo producto
     def saveProduct(self, product):
         session.add(product)
         session.commit()
@@ -85,6 +86,8 @@ class Department:
         cards = self.soup.find_all('div', id='gridItemRoot')
 
         for card in cards:
+
+            ## Esta parte contiene la logica de extraccion de cada uno de los elementos
             try:
                 image = card.find('img')['src']
             except:
@@ -110,7 +113,7 @@ class Department:
 
      
             
-
+            ## genera el objeto apoyandonos del orm
             element = Product(name=name, 
                               price=price, 
                               product_url='https://www.amazon.com.mx/' + card.find_all('a', 'a-link-normal')[1]['href'], 
@@ -139,7 +142,12 @@ class Department:
             self.setSoup(response_text=response.text)
             self.getPageElements()
 
+        logger.log(f'Finish department extration | {self.name}')
 
+"""
+    Se encarga de generar todas las tablas dentro de la base de datos
+    en caso de que no se encuentren creadas
+"""
 Base.metadata.create_all(ENGINE)
 
 
