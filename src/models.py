@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Dict
 from datetime import datetime
 from time import sleep
+import json
 
 from bs4 import BeautifulSoup
 import requests
@@ -143,6 +144,20 @@ class Department:
             self.getPageElements()
 
         logger.log(f'Finish department extration | {self.name}')
+
+    def getJson(self):
+        records = [product.to_dict() for product in self.products] 
+        file_name = "productos.json"
+
+        # Escribir la lista en el archivo JSON
+        with open(file_name, 'a') as json_file:
+            json.dump(records, json_file, indent=4)
+
+        logger.log(f"Los datos se han guardado en el archivo '{file_name}'")
+
+
+
+    
 
 """
     Se encarga de generar todas las tablas dentro de la base de datos

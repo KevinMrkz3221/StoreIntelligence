@@ -62,6 +62,7 @@ def extraction(department_list):
         department.setSoup(response.text)
         department.getPageNumber()
         department.getAllElements()
+        department.getJson()
 
     return department_list
 
